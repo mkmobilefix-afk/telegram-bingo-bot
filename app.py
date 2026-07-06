@@ -29,10 +29,17 @@ bot = Application.builder().token(BOT_TOKEN).build()
 # ---------------- START ----------------
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+
+    create_user(
+        user.id,
+        user.username or ""
+    )
+
     await update.message.reply_text(
         "🇪🇹 Welcome to Ethio Bingo!\n\n"
-        "🎟 Entry Fee: 20 Birr\n\n"
-        "Use /join to play."
+        "✅ Account created successfully.\n\n"
+        "Use /join to continue."
     )
 
 
