@@ -1,14 +1,23 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-import os
-
-TOKEN = os.environ["BOT_TOKEN"]
+from config import BOT_TOKEN
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🎉 እንኳን ወደ Bingo Bot በደህና መጡ!")
+    await update.message.reply_text(
+        "🇪🇹 Welcome to Ethio Bingo!\n\n"
+        "🎟 Entry Fee : 20 Birr\n"
+        "Use /join to join the next game."
+    )
 
-app = Application.builder().token(TOKEN).build()
+async def join(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "💳 Pay 20 Birr using Telebirr.\n"
+        "After payment send your screenshot."
+    )
+
+app = Application.builder().token(BOT_TOKEN).build()
+
 app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("join", join))
 
-print("Bot started...")
 app.run_polling()
