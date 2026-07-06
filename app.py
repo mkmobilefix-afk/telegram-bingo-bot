@@ -21,11 +21,28 @@ templates = Jinja2Templates(directory="templates")
 bot = Application.builder().token(BOT_TOKEN).build()
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+from telegram import (
+    Update,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    WebAppInfo,
+)
+
+async def join(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                "🎮 Open Ethio Bingo",
+                web_app=WebAppInfo(
+                    url="https://telegram-bingo-bot-f79o.onrender.com"
+                ),
+            )
+        ]
+    ]
+
     await update.message.reply_text(
-        "🇪🇹 Welcome to Ethio Bingo!\n\n"
-        "🎟 Entry Fee: 20 Birr\n\n"
-        "Use /join to continue."
+        "💳 Entry Fee: 20 Birr\n\nTap the button below to open the Mini App.",
+        reply_markup=InlineKeyboardMarkup(keyboard),
     )
 
 
