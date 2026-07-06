@@ -1,5 +1,4 @@
 fastapi
 uvicorn
 jinja2
-python-multipart
-python-telegram-bot==22.2
+python-telegram-bot==21.6
