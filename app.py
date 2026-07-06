@@ -1,4 +1,34 @@
-from fastapi import FastAPI, Request
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await bot.initialize()
+    await bot.start()
+    yield
+    await bot.stop()
+    await bot.shutdown()
+
+app = FastAPI(
+    title="Ethio Bingo",
+    lifespan=lifespan
+)
+
+templates = Jinja2Templates(directory="templates")
+
+
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "title": "Ethio Bingo",
+            "entry_fee": "20 Birr"
+        }
+    )
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from telegram import Update
