@@ -35,17 +35,9 @@ app = FastAPI(
 templates = Jinja2Templates(directory="templates")
 
 
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    return templates.TemplateResponse(
-    request=request,
-    name="index.html",
-    context={
-        "request": request,
-        "title": "Ethio Bingo",
-        "entry_fee": "20 Birr",
-    },
-)
+@app.get("/")
+async def home():
+    return {"message": "Ethio Bingo is running"}
 
 
 @app.get("/health")
