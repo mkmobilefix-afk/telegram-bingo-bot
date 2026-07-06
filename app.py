@@ -49,10 +49,12 @@ async def home(request: Request):
 @app.on_event("startup")
 async def startup():
     await bot.initialize()
+    await bot.start()
 
 
 @app.on_event("shutdown")
 async def shutdown():
+    await bot.stop()
     await bot.shutdown()
 
 
