@@ -46,3 +46,22 @@ async def home(request: Request):
         "index.html",
         {"request": request}
     )
+@app.on_event("startup")
+async def startup():
+    await bot.initialize()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    await bot.shutdown()
+
+
+@app.post("/webhook")
+async def telegram_webhook(request: Request):
+    data = await request.json()
+
+    update = Update.de_json(data, bot.bot)
+
+    await bot.process_update(update)
+
+    return {"ok": True}
