@@ -1,6 +1,5 @@
-python-telegram-bot==21.6
 fastapi
 uvicorn
 jinja2
 python-multipart
-aiosqlite
+python-telegram-bot==22.2
