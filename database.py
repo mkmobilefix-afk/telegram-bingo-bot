@@ -183,3 +183,14 @@ def save_card(user_id, game_id, numbers):
 
     conn.commit()
     conn.close()
+    def save_deposit(telegram_id, amount, screenshot):
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO deposits(user_id, amount, screenshot)
+        VALUES(?, ?, ?)
+    """, (telegram_id, amount, screenshot))
+
+    conn.commit()
+    conn.close()
