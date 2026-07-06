@@ -1,11 +1,16 @@
 import os
-import json
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from telegram import Update
+from telegram import (
+    Update,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    WebAppInfo,
+)
+
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -21,14 +26,20 @@ templates = Jinja2Templates(directory="templates")
 bot = Application.builder().token(BOT_TOKEN).build()
 
 
-from telegram import (
-    Update,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    WebAppInfo,
-)
+# ---------------- START ----------------
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🇪🇹 Welcome to Ethio Bingo!\n\n"
+        "🎟 Entry Fee: 20 Birr\n\n"
+        "Use /join to play."
+    )
+
+
+# ---------------- JOIN ----------------
 
 async def join(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     keyboard = [
         [
             InlineKeyboardButton(
@@ -41,15 +52,8 @@ async def join(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
 
     await update.message.reply_text(
-        "💳 Entry Fee: 20 Birr\n\nTap the button below to open the Mini App.",
+        "💳 Entry Fee: 20 Birr\n\nTap below to open the Mini App.",
         reply_markup=InlineKeyboardMarkup(keyboard),
-    )
-
-
-async def join(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "💳 Pay 20 Birr using Telebirr.\n"
-        "After payment open the Mini App."
     )
 
 
@@ -57,12 +61,19 @@ bot.add_handler(CommandHandler("start", start))
 bot.add_handler(CommandHandler("join", join))
 
 
+# ---------------- WEBSITE ----------------
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse(
-        "index.html",
-        {"request": request}
+        request=request,
+        name="index.html",
+        context={"request": request},
     )
+
+
+# ---------------- STARTUP ----------------
+
 @app.on_event("startup")
 async def startup():
     await bot.initialize()
@@ -74,6 +85,8 @@ async def shutdown():
     await bot.stop()
     await bot.shutdown()
 
+
+# ---------------- WEBHOOK ----------------
 
 @app.post("/webhook")
 async def telegram_webhook(request: Request):
