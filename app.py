@@ -72,12 +72,17 @@ bot.add_handler(CommandHandler("join", join))
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
+
+    card = generate_card()
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"request": request},
+        context={
+            "request": request,
+            "card": card
+        },
     )
-
 
 # ---------------- STARTUP ----------------
 
