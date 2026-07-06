@@ -1,4 +1,5 @@
 import os
+from config import *
 from bingo import generate_card
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
