@@ -1,1 +1,64 @@
+body{
+    margin:0;
+    padding:20px;
+    font-family:Arial,sans-serif;
+    background:#0b5ed7;
+    color:white;
+    text-align:center;
+}
 
+.container{
+    max-width:420px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    color:black;
+    border-radius:15px;
+    padding:20px;
+    margin-top:20px;
+}
+
+.balance{
+    font-size:22px;
+    font-weight:bold;
+    color:#28a745;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    margin-top:15px;
+    cursor:pointer;
+}
+
+.deposit{
+    background:#198754;
+    color:white;
+}
+
+.play{
+    background:#ffc107;
+    color:black;
+}
+
+.play:disabled{
+    background:#999;
+    cursor:not-allowed;
+}
+
+table{
+    margin:auto;
+    border-collapse:collapse;
+}
+
+td{
+    width:55px;
+    height:55px;
+    border:1px solid #ccc;
+    font-weight:bold;
+}
