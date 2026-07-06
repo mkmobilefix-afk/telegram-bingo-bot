@@ -1,4 +1,5 @@
 import os
+from database import save_deposit
 from config import *
 from bingo import generate_card
 from fastapi import FastAPI, Request
