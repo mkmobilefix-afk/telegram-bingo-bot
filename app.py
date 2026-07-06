@@ -10,7 +10,7 @@ from telegram import (
     InlineKeyboardMarkup,
     WebAppInfo,
 )
-
+from database import init_db, create_user
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -76,6 +76,8 @@ async def home(request: Request):
 
 @app.on_event("startup")
 async def startup():
+    init_db()
+
     await bot.initialize()
     await bot.start()
 
