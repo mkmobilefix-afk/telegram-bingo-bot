@@ -1,6 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ethio Bingo</title>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🇪🇹 Ethio Bingo</h1>
+
+<div class="card">
+
+<h3>Balance</h3>
+
+<div class="balance">
+0.00 Birr
+</div>
+
+<button class="deposit" onclick="deposit()">
+💳 Deposit
+</button>
+
+<button class="play" disabled>
+🎮 Play
+</button>
+
+<p>
+Play button will unlock after your deposit is approved.
+</p>
+
+</div>
+
+<div class="card">
+
 <h2>Your Bingo Card</h2>
 
-<table border="1" style="margin:auto;border-collapse:collapse;">
+<table>
 
 {% for row in card %}
 
@@ -8,11 +49,7 @@
 
 {% for item in row %}
 
-<td style="width:60px;height:60px;text-align:center;">
-
-{{ item }}
-
-</td>
+<td>{{ item }}</td>
 
 {% endfor %}
 
@@ -21,82 +58,12 @@
 {% endfor %}
 
 </table>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Ethio Bingo</title>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<style>
-
-body{
-background:#0b5ed7;
-color:white;
-font-family:Arial;
-text-align:center;
-padding:30px;
-}
-
-button{
-
-background:#28a745;
-color:white;
-border:none;
-padding:15px;
-border-radius:10px;
-font-size:18px;
-width:220px;
-
-}
-
-.card{
-
-background:white;
-color:black;
-padding:20px;
-border-radius:15px;
-margin:auto;
-max-width:350px;
-
-}
-
-</style>
-
-</head>
-
-<body>
-
-<h1>🇪🇹 Ethio Bingo</h1>
-
-<div class="card">
-
-<h2>Entry Fee</h2>
-
-<h1>20 Birr</h1>
-
-<p>Pay with Telebirr and Join Today's Game.</p>
-
-<button onclick="joinGame()">
-🎮 Join Game
-</button>
 
 </div>
 
-<script>
+</div>
 
-Telegram.WebApp.ready();
-
-function joinGame(){
-
-Telegram.WebApp.showAlert(
-"Please complete your Telebirr payment."
-);
-
-}
-
-</script>
+<script src="/static/script.js"></script>
 
 </body>
 </html>
