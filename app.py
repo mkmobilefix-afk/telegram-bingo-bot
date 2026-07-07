@@ -12,13 +12,17 @@ from telegram import (
     InlineKeyboardMarkup,
     WebAppInfo,
 )
-from database import init_db, create_user
-from telegram.ext import (
-    Application,
-    CommandHandler,
-    ContextTypes,
+from database import (
+    init_db,
+    create_user,
+    get_user,
+    get_current_game,
+    get_player_card_count,
+    add_prize_pool,
+    save_card,
+    deduct_balance,
+    save_deposit,
 )
-
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 app = FastAPI()
