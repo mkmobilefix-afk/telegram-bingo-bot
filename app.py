@@ -113,3 +113,54 @@ async def telegram_webhook(request: Request):
     await bot.process_update(update)
 
     return {"ok": True}
+async def buy(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    user = update.effective_user
+
+    player = get_user(user.id)
+
+    if not player:
+        await update.message.reply_text(
+            "Please use /start first."
+        )
+        return
+
+    if player["balance"] < 20:
+        await update.message.reply_text(
+            "❌ Insufficient balance."
+        )
+        return
+
+    game = get_current_game()
+
+    if not game:
+        await update.message.reply_text(
+            "No active game."
+        )
+        return
+
+    cards = get_player_card_count(user.id, game["id"])
+
+    if cards >= 5:
+        await update.message.reply_text(
+            "❌ Maximum 5 cards allowed."
+        )
+        return
+
+    deduct_balance(user.id, 20)
+
+    add_prize_pool(game["id"], 20)
+
+    card = get_random_card()
+
+    save_card(
+        user.id,
+        game["id"],
+        card_to_json(card)
+    )
+
+    await update.message.reply_text(
+        f"✅ Card purchased!\n\n"
+        f"Cards: {cards + 1}/5\n"
+        f"Entry Fee: 20 Birr"
+    )
