@@ -58,3 +58,9 @@ def generate_cards(count=100):
             cards.append(card)
 
     return cards
+    def get_random_card():
+    """
+    Return one random bingo card.
+    """
+
+    return random.choice(generate_cards())
