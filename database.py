@@ -165,10 +165,12 @@ def create_game():
     VALUES('waiting')
     """)
 
+    game_id = cur.lastrowid
+
     conn.commit()
     conn.close()
 
-
+    return game_id
 # ---------------- CARD ----------------
 
 def save_card(user_id, game_id, numbers):
