@@ -39,3 +39,22 @@ def generate_called_numbers():
     numbers = list(range(1, 76))
     random.shuffle(numbers)
     return numbers
+def generate_cards(count=100):
+    """
+    Generate multiple unique bingo cards.
+    """
+
+    cards = []
+    seen = set()
+
+    while len(cards) < count:
+
+        card = generate_bingo_card()
+
+        key = json.dumps(card)
+
+        if key not in seen:
+            seen.add(key)
+            cards.append(card)
+
+    return cards
