@@ -39,6 +39,8 @@ def generate_called_numbers():
     numbers = list(range(1, 76))
     random.shuffle(numbers)
     return numbers
+
+
 def generate_cards(count=100):
     """
     Generate multiple unique bingo cards.
@@ -58,9 +60,13 @@ def generate_cards(count=100):
             cards.append(card)
 
     return cards
-    def get_random_card():
+
+
+def get_random_card():
     """
     Return one random bingo card.
     """
 
-    return random.choice(generate_cards())
+    cards = generate_cards()
+
+    return random.choice(cards)
