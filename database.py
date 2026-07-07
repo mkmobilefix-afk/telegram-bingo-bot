@@ -198,3 +198,47 @@ def save_deposit(telegram_id, amount, screenshot):
 
     conn.commit()
     conn.close()
+def get_current_game():
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+    SELECT * FROM games
+    WHERE status='waiting'
+    ORDER BY id DESC
+    LIMIT 1
+    """)
+
+    game = cur.fetchone()
+
+    conn.close()
+
+    return game
+    def get_player_card_count(telegram_id, game_id):
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+    SELECT COUNT(*)
+    FROM cards
+    WHERE user_id=? AND game_id=?
+    """, (telegram_id, game_id))
+
+    count = cur.fetchone()[0]
+
+    conn.close()
+
+    return count
+    def add_prize_pool(game_id, amount):
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+    UPDATE games
+    SET prize = prize + ?
+    WHERE id=?
+    """, (amount, game_id))
+
+    conn.commit()
+    conn.close()
