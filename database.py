@@ -242,3 +242,58 @@ def get_current_game():
 
     conn.commit()
     conn.close()
+    # ---------------- CURRENT GAME ----------------
+
+def get_current_game():
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT *
+        FROM games
+        WHERE status='waiting'
+        ORDER BY id DESC
+        LIMIT 1
+    """)
+
+    game = cur.fetchone()
+
+    conn.close()
+
+    return game
+
+
+# ---------------- PLAYER CARD COUNT ----------------
+
+def get_player_card_count(user_id, game_id):
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT COUNT(*) AS total
+        FROM cards
+        WHERE user_id=?
+        AND game_id=?
+    """, (user_id, game_id))
+
+    total = cur.fetchone()["total"]
+
+    conn.close()
+
+    return total
+
+
+# ---------------- PRIZE POOL ----------------
+
+def add_prize_pool(game_id, amount):
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        UPDATE games
+        SET prize = prize + ?
+        WHERE id=?
+    """, (amount, game_id))
+
+    conn.commit()
+    conn.close()
