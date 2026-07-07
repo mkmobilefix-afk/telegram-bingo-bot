@@ -23,6 +23,10 @@ from database import (
     deduct_balance,
     save_deposit,
 )
+from game_engine import (
+    get_random_card,
+    card_to_json,
+)
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 app = FastAPI()
