@@ -24,28 +24,39 @@ def init_db():
     )
     """)
 
-    # Deposits
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS deposits(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        amount REAL,
-        screenshot TEXT,
-        status TEXT DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-    """)
+   # Deposits
+cur.execute("""
+CREATE TABLE IF NOT EXISTS deposits(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    telegram_id INTEGER,
+    amount REAL,
+    screenshot TEXT,
+    status TEXT DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+""")
 
-    # Games
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS games(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        status TEXT DEFAULT 'waiting',
-        winner INTEGER,
-        prize REAL DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-    """)
+# Games
+cur.execute("""
+CREATE TABLE IF NOT EXISTS games(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    status TEXT DEFAULT 'waiting',
+    prize REAL DEFAULT 0,
+    winner INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+""")
+
+# Bingo Cards
+cur.execute("""
+CREATE TABLE IF NOT EXISTS cards(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    telegram_id INTEGER,
+    game_id INTEGER,
+    numbers TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+""")
 
     # Cards
     cur.execute("""
