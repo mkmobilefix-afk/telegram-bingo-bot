@@ -136,15 +136,15 @@ def deduct_balance(telegram_id, amount):
     conn.close()
   # ---------------- DEPOSITS ----------------
 
-def create_deposit(user_id, amount, screenshot):
+def save_deposit(telegram_id, amount, screenshot):
     conn = get_db()
     cur = conn.cursor()
 
     cur.execute("""
         INSERT INTO deposits
-        (user_id, amount, screenshot)
+        (telegram_id, amount, screenshot)
         VALUES (?, ?, ?)
-    """, (user_id, amount, screenshot))
+    """, (telegram_id, amount, screenshot))
 
     conn.commit()
     conn.close()
