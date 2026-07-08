@@ -179,18 +179,7 @@ def approve_deposit(deposit_id):
     conn.commit()
     conn.close()
 
-def approve_deposit(deposit_id):
-    conn = get_db()
-    cur = conn.cursor()
 
-    cur.execute("""
-        UPDATE deposits
-        SET status='approved'
-        WHERE id=?
-    """, (deposit_id,))
-
-    conn.commit()
-    conn.close()
 
 
 # ---------------- GAMES ----------------
