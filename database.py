@@ -178,7 +178,18 @@ def approve_deposit(deposit_id):
 
     conn.commit()
     conn.close()
+def reject_deposit(deposit_id):
+    conn = get_db()
+    cur = conn.cursor()
 
+    cur.execute("""
+        UPDATE deposits
+        SET status='rejected'
+        WHERE id=?
+    """, (deposit_id,))
+
+    conn.commit()
+    conn.close()
 
 
 
