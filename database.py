@@ -47,7 +47,7 @@ def init_db():
     )
     """)
 
-    # Bingo Cards
+    # Cards
     cur.execute("""
     CREATE TABLE IF NOT EXISTS cards(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,9 +69,9 @@ def create_user(telegram_id, username):
     cur = conn.cursor()
 
     cur.execute("""
-    INSERT OR IGNORE INTO users
-    (telegram_id, username)
-    VALUES (?, ?)
+        INSERT OR IGNORE INTO users
+        (telegram_id, username)
+        VALUES (?, ?)
     """, (telegram_id, username))
 
     conn.commit()
@@ -83,8 +83,9 @@ def get_user(telegram_id):
     cur = conn.cursor()
 
     cur.execute("""
-    SELECT * FROM users
-    WHERE telegram_id=?
+        SELECT *
+        FROM users
+        WHERE telegram_id=?
     """, (telegram_id,))
 
     user = cur.fetchone()
@@ -101,9 +102,9 @@ def add_balance(telegram_id, amount):
     cur = conn.cursor()
 
     cur.execute("""
-    UPDATE users
-    SET balance = balance + ?
-    WHERE telegram_id=?
+        UPDATE users
+        SET balance = balance + ?
+        WHERE telegram_id=?
     """, (amount, telegram_id))
 
     conn.commit()
@@ -115,25 +116,37 @@ def deduct_balance(telegram_id, amount):
     cur = conn.cursor()
 
     cur.execute("""
-    UPDATE users
-    SET balance = balance - ?
-    WHERE telegram_id=?
+        UPDATE users
+        SET balance = balance - ?
+        WHERE telegram_id=?
     """, (amount, telegram_id))
 
     conn.commit()
     conn.close()
-
-
-# ---------------- DEPOSIT ----------------
+  # ---------------- DEPOSITS ----------------
 
 def create_deposit(user_id, amount, screenshot):
     conn = get_db()
     cur = conn.cursor()
 
     cur.execute("""
-    INSERT INTO deposits
-    (user_id, amount, screenshot)
-    VALUES (?, ?, ?)
+        INSERT INTO deposits
+        (user_id, amount, screenshot)
+        VALUES (?, ?, ?)
+    """, (user_id, amount, screenshot))
+
+    conn.commit()
+    conn.close()
+
+
+def save_deposit(user_id, amount, screenshot):
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO deposits
+        (user_id, amount, screenshot)
+        VALUES (?, ?, ?)
     """, (user_id, amount, screenshot))
 
     conn.commit()
@@ -145,24 +158,24 @@ def approve_deposit(deposit_id):
     cur = conn.cursor()
 
     cur.execute("""
-    UPDATE deposits
-    SET status='approved'
-    WHERE id=?
+        UPDATE deposits
+        SET status='approved'
+        WHERE id=?
     """, (deposit_id,))
 
     conn.commit()
     conn.close()
 
 
-# ---------------- GAME ----------------
+# ---------------- GAMES ----------------
 
 def create_game():
     conn = get_db()
     cur = conn.cursor()
 
     cur.execute("""
-    INSERT INTO games(status)
-    VALUES('waiting')
+        INSERT INTO games(status, prize)
+        VALUES('waiting', 0)
     """)
 
     game_id = cur.lastrowid
@@ -171,79 +184,7 @@ def create_game():
     conn.close()
 
     return game_id
-# ---------------- CARD ----------------
 
-def save_card(user_id, game_id, numbers):
-    conn = get_db()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT INTO cards (user_id, game_id, numbers)
-        VALUES (?, ?, ?)
-    """, (user_id, game_id, numbers))
-
-    conn.commit()
-    conn.close()
-
-
-# ---------------- DEPOSIT ----------------
-
-def save_deposit(user_id, amount, screenshot):
-    conn = get_db()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT INTO deposits (user_id, amount, screenshot)
-        VALUES (?, ?, ?)
-    """, (user_id, amount, screenshot))
-
-    conn.commit()
-    conn.close()
-def get_current_game():
-    conn = get_db()
-    cur = conn.cursor()
-
-    cur.execute("""
-    SELECT * FROM games
-    WHERE status='waiting'
-    ORDER BY id DESC
-    LIMIT 1
-    """)
-
-    game = cur.fetchone()
-
-    conn.close()
-
-    return game
-    def get_player_card_count(telegram_id, game_id):
-    conn = get_db()
-    cur = conn.cursor()
-
-    cur.execute("""
-    SELECT COUNT(*)
-    FROM cards
-    WHERE user_id=? AND game_id=?
-    """, (telegram_id, game_id))
-
-    count = cur.fetchone()[0]
-
-    conn.close()
-
-    return count
-    def add_prize_pool(game_id, amount):
-
-    conn = get_db()
-    cur = conn.cursor()
-
-    cur.execute("""
-    UPDATE games
-    SET prize = prize + ?
-    WHERE id=?
-    """, (amount, game_id))
-
-    conn.commit()
-    conn.close()
-    # ---------------- CURRENT GAME ----------------
 
 def get_current_game():
     conn = get_db()
@@ -262,9 +203,21 @@ def get_current_game():
     conn.close()
 
     return game
+    # ---------------- CARDS ----------------
 
+def save_card(user_id, game_id, numbers):
+    conn = get_db()
+    cur = conn.cursor()
 
-# ---------------- PLAYER CARD COUNT ----------------
+    cur.execute("""
+        INSERT INTO cards
+        (user_id, game_id, numbers)
+        VALUES (?, ?, ?)
+    """, (user_id, game_id, numbers))
+
+    conn.commit()
+    conn.close()
+
 
 def get_player_card_count(user_id, game_id):
     conn = get_db()
@@ -273,8 +226,7 @@ def get_player_card_count(user_id, game_id):
     cur.execute("""
         SELECT COUNT(*) AS total
         FROM cards
-        WHERE user_id=?
-        AND game_id=?
+        WHERE user_id=? AND game_id=?
     """, (user_id, game_id))
 
     total = cur.fetchone()["total"]
@@ -298,3 +250,40 @@ def add_prize_pool(game_id, amount):
 
     conn.commit()
     conn.close()
+
+
+# ---------------- OPTIONAL HELPERS ----------------
+
+def get_game_cards(game_id):
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT *
+        FROM cards
+        WHERE game_id=?
+    """, (game_id,))
+
+    cards = cur.fetchall()
+
+    conn.close()
+
+    return cards
+
+
+def get_pending_deposits():
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT *
+        FROM deposits
+        WHERE status='pending'
+        ORDER BY created_at ASC
+    """)
+
+    deposits = cur.fetchall()
+
+    conn.close()
+
+    return deposits
