@@ -150,19 +150,34 @@ def save_deposit(telegram_id, amount, screenshot):
     conn.close()
 
 
-def save_deposit(user_id, amount, screenshot):
+def approve_deposit(deposit_id):
     conn = get_db()
     cur = conn.cursor()
 
     cur.execute("""
-        INSERT INTO deposits
-        (user_id, amount, screenshot)
-        VALUES (?, ?, ?)
-    """, (user_id, amount, screenshot))
+        SELECT telegram_id, amount
+        FROM deposits
+        WHERE id=?
+    """, (deposit_id,))
+
+    dep = cur.fetchone()
+
+    if dep:
+
+        cur.execute("""
+            UPDATE users
+            SET balance = balance + ?
+            WHERE telegram_id=?
+        """, (dep["amount"], dep["telegram_id"]))
+
+        cur.execute("""
+            UPDATE deposits
+            SET status='approved'
+            WHERE id=?
+        """, (deposit_id,))
 
     conn.commit()
     conn.close()
-
 
 def approve_deposit(deposit_id):
     conn = get_db()
